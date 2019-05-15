@@ -30,20 +30,18 @@ public class Security extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/register", "/h2-console/**", "/activate").permitAll()
+                .antMatchers("/h2-console/**", "/user/register", "/user/activate").permitAll()
+                .antMatchers("/user/**").hasRole("ADMIN")
                 .and()
                 .csrf().disable()
                 .headers().frameOptions().disable()
                 .and()
                 .httpBasic();
-
     }
-
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
     }
-
 
 }

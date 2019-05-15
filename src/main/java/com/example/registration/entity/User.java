@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,21 +16,22 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-public class User extends AbstractEntity{
+public class User extends AbstractEntity {
 
     private String name;
 
     private String username;
 
-    private String password;
+    @Email(message = "Invalid email")
+    private String email;
 
-    private int age;
+    private String password;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_roles",
-            joinColumns = @JoinColumn(name = "id_user"),
-            inverseJoinColumns = @JoinColumn(name = "id_role"))
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
     private boolean isExpired;
@@ -40,6 +42,8 @@ public class User extends AbstractEntity{
 
     private boolean isEnabled;
 
-//    private ActivationToken activationToken;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "activation_token_id")
+    private ActivationToken activationToken;
 
 }
